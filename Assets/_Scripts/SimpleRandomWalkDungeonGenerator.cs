@@ -29,15 +29,18 @@ public class SimpleRandomWalkDungeonGenerator : MonoBehaviour
     [SerializeField] public bool startRandomlyEachIteration = true;
 
     /// <summary>
+    /// 瓦片地图可视化
+    /// </summary>
+    [SerializeField] private TilemapVisualizer tilemapVisualizer;
+
+    /// <summary>
     /// 运行程序生成
     /// </summary>
     public void RunProceduralGeneration()
     {
         HashSet<Vector2Int> floorPositions = RunRandomWalk();   // 地砖位置
-        foreach (var position in floorPositions)
-        {
-            Debug.Log(position);
-        }
+        tilemapVisualizer.Clear();
+        tilemapVisualizer.PaintFloorTiles(floorPositions);
     }
 
     /// <summary>
