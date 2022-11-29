@@ -11,17 +11,9 @@ using Random = UnityEngine.Random;
 public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
 {
     /// <summary>
-    /// 迭代次数
+    /// 随机游走数据
     /// </summary>
-    [SerializeField] private int iterations = 10;
-    /// <summary>
-    /// 游走长度
-    /// </summary>
-    [SerializeField] public int walkLenght = 10;
-    /// <summary>
-    /// 随机开始每次迭代
-    /// </summary>
-    [SerializeField] public bool startRandomlyEachIteration = true;
+    [SerializeField] private SimpleRandomWalkSO randomWalkParameters;
 
     protected override void RunProceduralGeneration()
     {
@@ -39,13 +31,13 @@ public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
         var currentPosition = startPosition;    // 当前位置
         HashSet<Vector2Int> floorPositions = new HashSet<Vector2Int>(); // 地砖位置
         // 根据迭代次数生成地砖位置
-        for (int i = 0; i < iterations; i++)
+        for (int i = 0; i < randomWalkParameters.iterations; i++)
         {
-            var path = ProceduralGenerationAlgorithms.SimpleRandomWalk(currentPosition, walkLenght);
+            var path = ProceduralGenerationAlgorithms.SimpleRandomWalk(currentPosition, randomWalkParameters.walkLenght);
             // UnionWith() 修改当前 HashSet<T> 对象以包含存在于该对象中、指定集合中或两者中的所有元素。
             // 去除重复的地砖位置
             floorPositions.UnionWith(path);
-            if (startRandomlyEachIteration)
+            if (randomWalkParameters.startRandomlyEachIteration)
             {
                 // ElementAt() 返回序列中指定索引处的元素。
                 // 从地砖位置中随机选择一个位置当做当前位置
