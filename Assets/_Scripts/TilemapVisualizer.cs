@@ -13,11 +13,18 @@ public class TilemapVisualizer : MonoBehaviour
     /// 地砖瓦片地图
     /// </summary>
     [SerializeField] private Tilemap floorTilemap;
-
+    /// <summary>
+    /// 墙壁瓦片地图
+    /// </summary>
+    [SerializeField] private Tilemap wallTilemap;
     /// <summary>
     /// 地砖瓦片
     /// </summary>
     [SerializeField] private TileBase floorTile;
+    /// <summary>
+    /// 墙顶瓦片
+    /// </summary>
+    [SerializeField] private TileBase wallTop;
 
     /// <summary>
     /// 根据地砖位置在瓦片地图中绘制地砖瓦片
@@ -43,6 +50,15 @@ public class TilemapVisualizer : MonoBehaviour
     }
 
     /// <summary>
+    /// 绘制简单基础墙壁
+    /// </summary>
+    /// <param name="position">位置</param>
+    internal void PaintSingleBasicWall(Vector2Int position)
+    {
+        PaintSingleTile(wallTilemap, wallTop, position);
+    }
+
+    /// <summary>
     /// 根据位置在瓦片地图中绘制单个瓦片
     /// </summary>
     /// <param name="tilemap">瓦片地图</param>
@@ -56,10 +72,11 @@ public class TilemapVisualizer : MonoBehaviour
     }
 
     /// <summary>
-    /// 清除地砖瓦片地图的全部瓦片
+    /// 清除瓦片地图的全部瓦片
     /// </summary>
     public void Clear()
     {
         floorTilemap.ClearAllTiles();
+        wallTilemap.ClearAllTiles();
     }
 }
