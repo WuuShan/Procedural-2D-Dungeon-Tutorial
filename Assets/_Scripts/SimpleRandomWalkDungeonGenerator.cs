@@ -8,13 +8,8 @@ using Random = UnityEngine.Random;
 /// <summary>
 /// 简单随机游走地牢生成器
 /// </summary>
-public class SimpleRandomWalkDungeonGenerator : MonoBehaviour
+public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
 {
-    /// <summary>
-    /// 起始位置
-    /// </summary>
-    [SerializeField] protected Vector2Int startPosition = Vector2Int.zero;
-
     /// <summary>
     /// 迭代次数
     /// </summary>
@@ -28,15 +23,7 @@ public class SimpleRandomWalkDungeonGenerator : MonoBehaviour
     /// </summary>
     [SerializeField] public bool startRandomlyEachIteration = true;
 
-    /// <summary>
-    /// 瓦片地图可视化
-    /// </summary>
-    [SerializeField] private TilemapVisualizer tilemapVisualizer;
-
-    /// <summary>
-    /// 运行程序生成
-    /// </summary>
-    public void RunProceduralGeneration()
+    protected override void RunProceduralGeneration()
     {
         HashSet<Vector2Int> floorPositions = RunRandomWalk();   // 地砖位置
         tilemapVisualizer.Clear();
