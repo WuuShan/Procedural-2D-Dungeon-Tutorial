@@ -39,10 +39,57 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         HashSet<Vector2Int> roomPositions = CreateRooms(potentialRoomPositions);
 
+        List<Vector2Int> deadEnds = FindAllDeadEnds(floorPositions);
+
+        CreateRoomsAtDeadEnd(deadEnds, roomPositions);
+
         floorPositions.UnionWith(roomPositions);
 
         tilemapVisualizer.PaintFloorTiles(floorPositions);
         WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
+    }
+
+    /// <summary>
+    /// 在死胡同处创建房间
+    /// </summary>
+    /// <param name="deadEnds">死胡同列表</param>
+    /// <param name="roomFloors">房间地砖</param>
+    private void CreateRoomsAtDeadEnd(List<Vector2Int> deadEnds, HashSet<Vector2Int> roomFloors)
+    {
+        foreach (var position in deadEnds)
+        {
+            if (!roomFloors.Contains(position)) // 如果死胡同的位置不含于房间地砖
+            {
+                var room = RunRandomWalk(randomWalkParameters, position);
+                roomFloors.UnionWith(room);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 根据地砖位置查找全部死胡同
+    /// </summary>
+    /// <param name="floorPositions">地砖位置</param>
+    /// <returns></returns>
+    private List<Vector2Int> FindAllDeadEnds(HashSet<Vector2Int> floorPositions)
+    {
+        List<Vector2Int> deadEnds = new List<Vector2Int>();
+        foreach (var position in floorPositions)
+        {
+            int neighboursCount = 0;    // 当前地砖的相邻地砖数量
+            foreach (var direction in Direction2D.cardinalDirectionList)
+            {
+                if (floorPositions.Contains(position + direction))  // 判断当前地砖的四面方向中是否包含地砖
+                {
+                    neighboursCount++;
+                }
+            }
+            if (neighboursCount == 1)   // 如果当前地砖的相邻地砖只有一个
+            {
+                deadEnds.Add(position); // 加入死胡同列表
+            }
+        }
+        return deadEnds;
     }
 
     /// <summary>
