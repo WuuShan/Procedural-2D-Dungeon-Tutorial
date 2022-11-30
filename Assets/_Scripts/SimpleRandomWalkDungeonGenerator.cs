@@ -13,11 +13,11 @@ public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
     /// <summary>
     /// 随机游走数据
     /// </summary>
-    [SerializeField] private SimpleRandomWalkSO randomWalkParameters;
+    [SerializeField] protected SimpleRandomWalkSO randomWalkParameters;
 
     protected override void RunProceduralGeneration()
     {
-        HashSet<Vector2Int> floorPositions = RunRandomWalk(randomWalkParameters);   // 地砖位置
+        HashSet<Vector2Int> floorPositions = RunRandomWalk(randomWalkParameters, startPosition);   // 地砖位置
         tilemapVisualizer.Clear();
         tilemapVisualizer.PaintFloorTiles(floorPositions);
         WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
@@ -28,9 +28,9 @@ public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
     /// </summary>
     /// <param name="parameters">随机游走数据</param>
     /// <returns>地砖位置</returns>
-    protected HashSet<Vector2Int> RunRandomWalk(SimpleRandomWalkSO parameters)
+    protected HashSet<Vector2Int> RunRandomWalk(SimpleRandomWalkSO parameters, Vector2Int position)
     {
-        var currentPosition = startPosition;    // 当前位置
+        var currentPosition = position;    // 当前位置
         HashSet<Vector2Int> floorPositions = new HashSet<Vector2Int>(); // 地砖位置
         // 根据迭代次数生成地砖位置
         for (int i = 0; i < parameters.iterations; i++)
