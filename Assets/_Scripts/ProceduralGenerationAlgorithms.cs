@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -73,11 +74,11 @@ public static class ProceduralGenerationAlgorithms
                 {
                     if (room.size.y >= minHeight * 2)   // 房间高度大于两倍的最小高度
                     {
-                        SplitHorizontally(minWidth, minHeight, roomsQueue, room);
+                        SplitHorizontally(minHeight, roomsQueue, room);
                     }
                     else if (room.size.x >= minWidth * 2)   // 房间宽度大于两倍的最小宽度
                     {
-                        SplitVertically(minWidth, minHeight, roomsQueue, room);
+                        SplitVertically(minWidth, roomsQueue, room);
                     }
                     else
                     {
@@ -88,11 +89,11 @@ public static class ProceduralGenerationAlgorithms
                 {
                     if (room.size.x >= minWidth * 2)
                     {
-                        SplitVertically(minWidth, minHeight, roomsQueue, room);
+                        SplitVertically(minWidth, roomsQueue, room);
                     }
                     else if (room.size.y >= minHeight * 2)
                     {
-                        SplitHorizontally(minWidth, minHeight, roomsQueue, room);
+                        SplitHorizontally(minHeight, roomsQueue, room);
                     }
                     else
                     {
@@ -104,14 +105,36 @@ public static class ProceduralGenerationAlgorithms
         return roomsList;
     }
 
-    private static void SplitVertically(int minWidth, int minHeight, Queue<BoundsInt> roomsQueue, BoundsInt room)
+    /// <summary>
+    /// 将房间垂直划分为两个房间并加入房间队列
+    /// </summary>
+    /// <param name="minWidth">最小宽度</param>
+    /// <param name="roomsQueue">房间队列</param>
+    /// <param name="room">要划分的房间</param>
+    private static void SplitVertically(int minWidth, Queue<BoundsInt> roomsQueue, BoundsInt room)
     {
-        throw new System.NotImplementedException();
+        var xSplit = Random.Range(1, room.size.x);
+        BoundsInt room1 = new BoundsInt(room.min, new Vector3Int(xSplit, room.min.y, room.min.z));
+        BoundsInt room2 = new BoundsInt(new Vector3Int(room.min.x + xSplit, room.min.y, room.min.z),
+            new Vector3Int(room.size.x - xSplit, room.size.y, room.size.z));
+        roomsQueue.Enqueue(room1);
+        roomsQueue.Enqueue(room2);
     }
 
-    private static void SplitHorizontally(int minWidth, int minHeight, Queue<BoundsInt> roomsQueue, BoundsInt room)
+    /// <summary>
+    /// 将房间水平划分为两个房间并加入房间队列
+    /// </summary>
+    /// <param name="minHeight">最小高度</param>
+    /// <param name="roomsQueue">房间队列</param>
+    /// <param name="room">要划分的房间</param>
+    private static void SplitHorizontally(int minHeight, Queue<BoundsInt> roomsQueue, BoundsInt room)
     {
-        throw new System.NotImplementedException();
+        var ySplit = Random.Range(1, room.size.y);  // (minHeight, room.size.y - minHeight)
+        BoundsInt room1 = new BoundsInt(room.min, new Vector3Int(room.size.x, ySplit, room.size.z));
+        BoundsInt room2 = new BoundsInt(new Vector3Int(room.min.x, room.min.y + ySplit, room.min.z),
+            new Vector3Int(room.size.x, room.size.y - ySplit, room.size.z));
+        roomsQueue.Enqueue(room1);
+        roomsQueue.Enqueue(room2);
     }
 }
 
