@@ -30,7 +30,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     /// </summary>
     [SerializeField, Range(0, 10)] private int offset = 1;
     /// <summary>
-    /// 随机游走房间
+    /// 使用随机游走来创建房间
     /// </summary>
     [SerializeField] private bool randomWalkRooms = false;
 
@@ -49,7 +49,15 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
 
-        floor = CreateSimpleRooms(roomsList);
+        if (randomWalkRooms)
+        {
+            floor = CreateRoomsRandomly(roomsList);
+        }
+        else
+        {
+            floor = CreateSimpleRooms(roomsList);
+        }
+
 
         List<Vector2Int> roomCenters = new List<Vector2Int>();
         foreach (var room in roomsList)
@@ -62,6 +70,31 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         tilemapVisualizer.PaintFloorTiles(floor);
         WallGenerator.CreateWalls(floor, tilemapVisualizer);
+    }
+
+    /// <summary>
+    /// 根据房间列表创建随机形状房间
+    /// </summary>
+    /// <param name="roomsList">房间列表</param>
+    /// <returns>地砖位置</returns>
+    private HashSet<Vector2Int> CreateRoomsRandomly(List<BoundsInt> roomsList)
+    {
+        HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
+        for (int i = 0; i < roomsList.Count; i++)
+        {
+            var roomBounds = roomsList[i];
+            var roomCenter = new Vector2Int(Mathf.RoundToInt(roomBounds.center.x), Mathf.RoundToInt(roomBounds.center.y));
+            var roomFloor = RunRandomWalk(randomWalkParameters, roomCenter);
+            foreach (var position in roomFloor)
+            {
+                if (position.x >= (roomBounds.xMin + offset) && position.x <= (roomBounds.xMax - offset) &&
+                    position.y >= (roomBounds.yMin + offset) && position.y <= (roomBounds.yMax - offset))
+                {
+                    floor.Add(position);
+                }
+            }
+        }
+        return floor;
     }
 
     /// <summary>
@@ -148,7 +181,7 @@ public class RoomFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     }
 
     /// <summary>
-    /// 根据房间列表创建简单房间
+    /// 根据房间列表创建简单形状房间
     /// </summary>
     /// <param name="roomsList">房间列表</param>
     /// <returns>地砖位置</returns>
