@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 墙壁类型助手
+/// </summary>
 public static class WallTypesHelper
 {
     public static HashSet<int> wallTop = new HashSet<int>

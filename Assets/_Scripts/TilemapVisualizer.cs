@@ -22,9 +22,9 @@ public class TilemapVisualizer : MonoBehaviour
     /// </summary>
     [SerializeField] private TileBase floorTile;
     /// <summary>
-    /// 墙顶瓦片
+    /// 墙壁瓦片
     /// </summary>
-    [SerializeField] private TileBase wallTop;
+    [SerializeField] private TileBase wallTop, wallSideRight, wallSiderLeft, wallBottom, wallFull;
 
     /// <summary>
     /// 根据地砖位置在瓦片地图中绘制地砖瓦片
@@ -50,12 +50,39 @@ public class TilemapVisualizer : MonoBehaviour
     }
 
     /// <summary>
-    /// 绘制简单基础墙壁
+    /// 根据墙壁类型并绘制简单基础墙壁
     /// </summary>
     /// <param name="position">位置</param>
+    /// <param name="binaryType">墙壁类型</param>
     internal void PaintSingleBasicWall(Vector2Int position, string binaryType)
     {
-        PaintSingleTile(wallTilemap, wallTop, position);
+        int typeAsInt = Convert.ToInt32(binaryType, 2);
+        TileBase tile = null;
+        if (WallTypesHelper.wallTop.Contains(typeAsInt))
+        {
+            tile = wallTop;
+        }
+        else if (WallTypesHelper.wallSideRight.Contains(typeAsInt))
+        {
+            tile = wallSideRight;
+        }
+        else if (WallTypesHelper.wallSideLeft.Contains(typeAsInt))
+        {
+            tile = wallSiderLeft;
+        }
+        else if (WallTypesHelper.wallBottm.Contains(typeAsInt))
+        {
+            tile = wallBottom;
+        }
+        else if (WallTypesHelper.wallFull.Contains(typeAsInt))
+        {
+            tile = wallFull;
+        }
+
+        if (tile != null)
+        {
+            PaintSingleTile(wallTilemap, tile, position);
+        }
     }
 
     /// <summary>
