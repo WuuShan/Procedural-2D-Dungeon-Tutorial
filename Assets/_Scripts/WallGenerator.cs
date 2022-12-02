@@ -16,9 +16,65 @@ public static class WallGenerator
     public static void CreateWalls(HashSet<Vector2Int> floorPositions, TilemapVisualizer tilemapVisualizer)
     {
         var basicWallPositions = FindWallsInDirections(floorPositions, Direction2D.cardinalDirectionList);
+        var cornerWallPositions = FindWallsInDirections(floorPositions, Direction2D.diagonalDirectionList);
+        CreateBasicWall(tilemapVisualizer, basicWallPositions, floorPositions);
+        CreateCornerWalls(tilemapVisualizer, cornerWallPositions, floorPositions);
+    }
+
+    /// <summary>
+    /// 创建对角线墙壁
+    /// </summary>
+    /// <param name="tilemapVisualizer">瓦片地图可视化</param>
+    /// <param name="cornerWallPositions">对角线墙壁位置</param>
+    /// <param name="floorPositions">地砖位置</param>
+    private static void CreateCornerWalls(TilemapVisualizer tilemapVisualizer, HashSet<Vector2Int> cornerWallPositions,
+        HashSet<Vector2Int> floorPositions)
+    {
+        // 判断每块墙壁对角线是否有地砖存在
+        foreach (var position in cornerWallPositions)
+        {
+            string neighboursBinaryType = "";   // 相邻墙壁以二进制类型存储
+            foreach (var direction in Direction2D.eightDirectionsList)
+            {
+                var neighbourPosition = position + direction;
+                if (floorPositions.Contains(neighbourPosition)) // 存在地砖则设为1
+                {
+                    neighboursBinaryType += "1";
+                }
+                else
+                {
+                    neighboursBinaryType += "0";
+                }
+            }
+            tilemapVisualizer.PaintSingleCornerWall(position, neighboursBinaryType);
+        }
+    }
+
+    /// <summary>
+    /// 创建基础墙壁
+    /// </summary>
+    /// <param name="tilemapVisualizer">瓦片地图可视化</param>
+    /// <param name="cornerWallPositions">对角线墙壁位置</param>
+    /// <param name="floorPositions">地砖位置</param>
+    private static void CreateBasicWall(TilemapVisualizer tilemapVisualizer, HashSet<Vector2Int> basicWallPositions,
+        HashSet<Vector2Int> floorPositions)
+    {
         foreach (var position in basicWallPositions)
         {
-            tilemapVisualizer.PaintSingleBasicWall(position);
+            string neighboursBinaryType = "";
+            foreach (var direction in Direction2D.cardinalDirectionList)
+            {
+                var neighbourPosition = position + direction;
+                if (floorPositions.Contains(neighbourPosition))
+                {
+                    neighboursBinaryType += "1";
+                }
+                else
+                {
+                    neighboursBinaryType += "0";
+                }
+            }
+            tilemapVisualizer.PaintSingleBasicWall(position, neighboursBinaryType);
         }
     }
 
