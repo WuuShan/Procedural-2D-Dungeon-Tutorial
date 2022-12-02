@@ -155,6 +155,32 @@ public static class Direction2D
     };
 
     /// <summary>
+    /// 对角线方向列表
+    /// </summary>
+    public static List<Vector2Int> diagonalDirectionList = new List<Vector2Int>
+    {
+        new Vector2Int(1,1),    // UP-RIGHT
+        new Vector2Int(1,-1),   // RIGHT-DOWN
+        new Vector2Int(-1,-1),  // DOWN-LEFT
+        new Vector2Int(-1,1)    // LEFT-UP
+    };
+
+    /// <summary>
+    /// 八向列表
+    /// </summary>
+    public static List<Vector2Int> eightDirectionsList = new List<Vector2Int>
+    {
+        new Vector2Int(0,1),    // UP
+        new Vector2Int(1,1),    // UP-RIGHT
+        new Vector2Int(1,0),    // RIGHT
+        new Vector2Int(1,-1),   // RIGHT-DOWN
+        new Vector2Int(0,-1),   // DOWN
+        new Vector2Int(-1,-1),  // DOWN-LEFT
+        new Vector2Int(-1,0),   // LEFT
+        new Vector2Int(-1,1)    // LEFT-UP
+    };
+
+    /// <summary>
     /// 获得随机的基本方向向量
     /// </summary>
     /// <returns>基本方向向量</returns>
